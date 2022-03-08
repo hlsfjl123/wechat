@@ -6,7 +6,10 @@
     <artifactId>springcloud_alibaba</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>shop_common</module>
+        <module>shop-common</module>
+        <module>shop-user</module>
+        <module>shop-product</module>
+        <module>shop-order</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -18,6 +21,7 @@
         <mysql-connector-version>8.0.20</mysql-connector-version>
         <fast-json-version>1.2.74</fast-json-version>
         <spring-boot-starter-web-version>2.3.4.RELEASE</spring-boot-starter-web-version>
+        <hutool-version>5.7.2</hutool-version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -56,7 +60,6 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -67,6 +70,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: service-user
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    password: root
+    username: hls12345
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #在没有@TableName表注的时候
+#  global-config:
+#    db-config:
+#      table-prefix: hls_
