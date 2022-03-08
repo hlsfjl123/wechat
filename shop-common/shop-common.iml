@@ -71,7 +71,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.2.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.2.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.20" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.12.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.13.0" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.74" level="project" />
   </component>
 </module>

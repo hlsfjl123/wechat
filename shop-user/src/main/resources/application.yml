@@ -9,6 +9,10 @@ spring:
     url: jdbc:mysql://localhost:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     password: root
     username: hls12345
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

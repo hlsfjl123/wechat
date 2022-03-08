@@ -9,11 +9,15 @@ import com.hls.alibaba.vo.ObjectRestResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @Author: User-XH251
@@ -29,10 +33,16 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     RestTemplate restTemplate;
+    @Autowired
+    DiscoveryClient discoveryClient;
+
     @PostMapping(value = "/{id}")
     public ObjectRestResponse<Order> order(@PathVariable(value = "id") Integer id) {
         log.info("接收到商品号为{}的商品，接下来下订单", id);
-        ObjectRestResponse<Product> restResponse = restTemplate.getForObject(productUrl + id, ObjectRestResponse.class);
+        //ObjectRestResponse<Product> restResponse = restTemplate.getForObject(productUrl + id, ObjectRestResponse.class);
+        List<ServiceInstance> instances = discoveryClient.getInstances("service-product");
+        ServiceInstance serviceInstance = instances.get(0);
+        ObjectRestResponse<Product> restResponse = restTemplate.getForObject("http://"+serviceInstance.getHost()+":"+serviceInstance.getPort()+"/product/" + id, ObjectRestResponse.class);
         log.info("查询到的商品信息为{}", JSON.toJSONString(restResponse.getData()));
         Product product = JSONUtil.toBean(JSONUtil.toJsonStr(restResponse.getData()), Product.class);
         return orderService.insert(assOrder(product));
