@@ -21,5 +21,7 @@ mybatis-plus:
 #  global-config:
 #    db-config:
 #      table-prefix: hls_
-
 product-url: http://127.0.0.1:8082/product/
+feign:
+  httpclient:
+    connection-timeout: 50000
