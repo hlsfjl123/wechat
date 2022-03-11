@@ -18,13 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
     @Override
-    public ObjectRestResponse<Product> getProductById(Integer id) {
+    public Product getProductById(Integer id) {
         LambdaQueryWrapper<Product> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Product::getId, id);
         Product product = baseMapper.selectOne(queryWrapper);
-        if (product == null) {
-            return new ObjectRestResponse<Product>().setResult(ResultStatus.NO_DATA);
-        }
-        return new ObjectRestResponse<Product>().setData(product);
+        return product;
     }
 }

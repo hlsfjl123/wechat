@@ -1,5 +1,8 @@
 server:
   port: 8083
+  tomcat:
+    #最大线程数
+    max-threads: 10
 
 spring:
   application:

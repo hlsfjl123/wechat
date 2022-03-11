@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 public interface ProductService extends IService<Product> {
 
-    public ObjectRestResponse getProductById(Integer id);
+    public Product getProductById(Integer id);
 }

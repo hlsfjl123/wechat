@@ -1,6 +1,7 @@
 package com.hls.alibaba.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hls.alibaba.aop.annotaion.ResponseResult;
 import com.hls.alibaba.entity.Product;
 import com.hls.alibaba.service.ProductService;
 import com.hls.alibaba.vo.ObjectRestResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
+
 @RequestMapping(value = "/product")
 public class ProductController {
 
@@ -24,11 +26,12 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping(value = "/{id}")
-    public ObjectRestResponse<Product> getProductById(@PathVariable(value = "id") Integer id) {
+    @ResponseResult
+    public Product getProductById(@PathVariable(value = "id") Integer id) {
         log.info("id为{}的商品查询", id);
-        ObjectRestResponse<Product> restResponse = productService.getProductById(id);
-        log.info("查询出来的商品为{}",JSON.toJSONString(restResponse.getData()));
-        return restResponse;
+        Product product = productService.getProductById(id);
+        log.info("查询出来的商品为{}",product.toString());
+        return product;
     }
 
 }
