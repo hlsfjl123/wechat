@@ -6,7 +6,7 @@ spring:
     name: service-user
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://175.24.178.200:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     password: admin
     username: hls12345
   cloud:

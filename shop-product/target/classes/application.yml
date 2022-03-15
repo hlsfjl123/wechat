@@ -6,9 +6,9 @@ spring:
     name: service-product
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    password: root
-    username: hls12345
+    url: jdbc:mysql://175.24.178.200:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    password: hls12345
+    username: root
   cloud:
     nacos:
       discovery:

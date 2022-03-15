@@ -1,0 +1,25 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848  #将gateway注册到网关
+    gateway:
+      discovery:
+        locator:
+          enabled: true     #gateway可以从nacos发现服务
+      routes: #路由数组    这里往下可以注掉  默认断言为service-product
+        - id:  product_rout #当前路由发的标识  要求唯一
+          uri: lb://service-product
+        #  uri: http://localhost:8082 #请求最终要被转发到的地址
+          order: 1 #路由的优先级  数字越小  优先级越高
+          predicates: #断言 条件判断 返回boolean 转发请求要求满足的条件
+            - Path= /product-serv/**  #当请求路径满足path指定的规则时 此路由信息才会正常转发
+            - Age=15,30
+          filters: #过滤器（在请求传递过程中  对请求做一些手脚）
+            - StripPrefix=1
+            - Log=true,false
+
