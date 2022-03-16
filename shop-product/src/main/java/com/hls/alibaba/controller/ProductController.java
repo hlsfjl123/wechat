@@ -7,10 +7,7 @@ import com.hls.alibaba.service.ProductService;
 import com.hls.alibaba.vo.ObjectRestResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: User-XH251
@@ -32,6 +29,11 @@ public class ProductController {
         Product product = productService.getProductById(id);
         log.info("查询出来的商品为{}",product.toString());
         return product;
+    }
+    @PostMapping(value = "/insert")
+    @ResponseResult
+    public boolean insert(@RequestBody Product product){
+      return   productService.insertProduct(product);
     }
 
 }

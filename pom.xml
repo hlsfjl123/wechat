@@ -24,6 +24,7 @@
         <fast-json-version>1.2.74</fast-json-version>
         <spring-boot-starter-web-version>2.3.4.RELEASE</spring-boot-starter-web-version>
         <hutool-version>5.7.2</hutool-version>
+        <jjwt-vesion>0.9.1</jjwt-vesion>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -77,6 +78,11 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt-vesion}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

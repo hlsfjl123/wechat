@@ -8,6 +8,14 @@ spring:
       discovery:
         server-addr: localhost:8848  #将gateway注册到网关
     gateway:
+      #配置跨域请求
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
       discovery:
         locator:
           enabled: true     #gateway可以从nacos发现服务
@@ -23,3 +31,8 @@ spring:
             - StripPrefix=1
             - Log=true,false
 
+my:
+  jwt:
+    skip-auth-urls:
+      - /user/login
+      - /user/logout
