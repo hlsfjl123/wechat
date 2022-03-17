@@ -1,10 +1,9 @@
 package com.hls.alibaba.utils;
 
-import com.hls.alibaba.config.JwtConfig;
 import com.hls.alibaba.entity.JwtInfo;
 import com.hls.alibaba.entity.User;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 
@@ -13,25 +12,21 @@ import java.util.Calendar;
  * @Date: 2022/3/16 13:48
  */
 public class JwtUtils {
-    @Autowired
-    private JwtConfig jwtConfig;
-
-
     /**
      * 创建token
      *
      * @param user
      * @return
      */
-    public String createToken(User user) {
+    public static String createToken(User user,Integer expire,String secret) {
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.SECOND, jwtConfig.getExpire());
+        instance.add(Calendar.SECOND, expire);
         String compact = Jwts.builder()
                 .setSubject(user.getUserName())
                 .claim("userId", user.getId())
                 .claim("username", user.getUserName())
                 .setExpiration(instance.getTime())
-                .signWith(SignatureAlgorithm.HS256, jwtConfig.getPrivateKey())
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
         return compact;
     }
@@ -41,8 +36,8 @@ public class JwtUtils {
      *
      * @return
      */
-    public Jws<Claims> parserToken(String token) {
-        return Jwts.parser().setSigningKey(jwtConfig.getPublicKey()).parseClaimsJws(token);
+    public static Jws<Claims> parserToken(String token,String publicKey) {
+        return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
     }
 
     /**
@@ -50,10 +45,10 @@ public class JwtUtils {
      *
      * @return
      */
-    public Claims getClaims(String token) {
+    public static Claims getClaims(String token,String publicKey) {
         Claims claims = null;
         try {
-            claims = Jwts.parser().setSigningKey(jwtConfig.getPublicKey()).parseClaimsJws(token).getBody();
+            claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
             claims = e.getClaims();
         } catch (UnsupportedJwtException e) {
@@ -74,8 +69,8 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public JwtInfo getInfoFromToken(String token) {
-        Jws<Claims> claimsJws = parserToken(token);
+    public  static JwtInfo getInfoFromToken(String token,String publicKey) {
+        Jws<Claims> claimsJws = parserToken(token,publicKey);
         Claims body = claimsJws.getBody();
         return new JwtInfo(Integer.valueOf(body.get("userId").toString()), body.getSubject());
     }
