@@ -1,0 +1,38 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+api-gateway/target/
+shop-common/target/classes/com/hls/alibaba/aop/
+shop-common/target/classes/com/hls/alibaba/config/UserConfig.class
+shop-common/target/classes/com/hls/alibaba/config/WebMvcConfigurerAdapter.class
+shop-common/target/classes/com/hls/alibaba/handler/
+shop-common/target/classes/com/hls/alibaba/interceptor/
+shop-common/target/classes/com/hls/alibaba/vo/UserBeanFactory.class
+shop-common/target/generated-sources/
+shop-common/target/maven-archiver/
+shop-common/target/maven-status/
+shop-common/target/shop-common-1.0-SNAPSHOT.jar
+shop-order/target/classes/com/hls/alibaba/controller/OrderController2.class
+shop-order/target/classes/com/hls/alibaba/service/ProductService.class
+shop-order/target/generated-sources/
+shop-order/target/maven-archiver/
+shop-order/target/maven-status/
+shop-order/target/shop-order-1.0-SNAPSHOT.jar
+shop-product/target/classes/com/
+shop-product/target/generated-sources/
+shop-product/target/maven-archiver/
+shop-product/target/maven-status/
+shop-product/target/shop-product-1.0-SNAPSHOT.jar
+shop-user/target/classes/com/hls/alibaba/config/
+shop-user/target/classes/com/hls/alibaba/utils/
+shop-user/target/generated-sources/
+shop-user/target/maven-archiver/
+shop-user/target/maven-status/
+shop-user/target/shop-user-1.0-SNAPSHOT.jar
+springboot_bean_init/target/

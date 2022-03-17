@@ -20,3 +20,8 @@ mybatis-plus:
 #  global-config:
 #    db-config:
 #      table-prefix: hls_
+
+jwt:
+  secret:
+  privateKey:
+  publicKey:

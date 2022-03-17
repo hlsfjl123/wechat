@@ -11,4 +11,6 @@ import com.hls.alibaba.entity.User;
 public interface UserService extends IService<User> {
 
     public void insert(User user);
+
+    public User selectUserByTelAndPassword(User user);
 }

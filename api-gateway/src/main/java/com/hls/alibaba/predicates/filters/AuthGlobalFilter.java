@@ -1,5 +1,9 @@
 package com.hls.alibaba.predicates.filters;
 
+import com.hls.alibaba.entity.JwtInfo;
+import com.hls.alibaba.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -9,6 +13,7 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -41,7 +46,17 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             DataBuffer buffer = response.bufferFactory().wrap(returnResponse);
             return response.writeWith(Flux.just(buffer));
         }
-
+        /**
+         * /从token中解析用户信息并设置到Header中去
+         */
+        try {
+            JwtUtils jwtUtils = new JwtUtils();
+            JwtInfo infoFromToken = jwtUtils.getInfoFromToken(token);
+            ServerHttpRequest request = exchange.getRequest().mutate().header("username", infoFromToken.getUserName()).build();
+            exchange = exchange.mutate().request(request).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return chain.filter(exchange);
     }
 

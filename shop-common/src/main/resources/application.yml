@@ -1,0 +1,5 @@
+jwt:
+  secret: hls12345!@#
+  privateKey:
+  publicKey:
+  expire: 86400
