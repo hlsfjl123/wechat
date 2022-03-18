@@ -3,7 +3,6 @@ package com.hls.alibaba.utils;
 import com.hls.alibaba.entity.JwtInfo;
 import com.hls.alibaba.entity.User;
 import io.jsonwebtoken.*;
-import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 
@@ -12,13 +11,22 @@ import java.util.Calendar;
  * @Date: 2022/3/16 13:48
  */
 public class JwtUtils {
+    public static void main(String[] args) {
+        User user = new User();
+        user.setId(1);
+        user.setPassword("123456");
+        user.setTelPhone("1312220268");
+        user.setUserName("houlinshuai");
+        String token = JwtUtils.createToken(user, 86400, "hls12345!@");
+        System.out.println(token);
+    }
     /**
      * 创建token
      *
      * @param user
      * @return
      */
-    public static String createToken(User user,Integer expire,String secret) {
+    public static String createToken(User user, Integer expire, String secret) {
         Calendar instance = Calendar.getInstance();
         instance.add(Calendar.SECOND, expire);
         String compact = Jwts.builder()
@@ -36,7 +44,7 @@ public class JwtUtils {
      *
      * @return
      */
-    public static Jws<Claims> parserToken(String token,String publicKey) {
+    public static Jws<Claims> parserToken(String token, String publicKey) {
         return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
     }
 
@@ -45,7 +53,7 @@ public class JwtUtils {
      *
      * @return
      */
-    public static Claims getClaims(String token,String publicKey) {
+    public static Claims getClaims(String token, String publicKey) {
         Claims claims = null;
         try {
             claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
@@ -69,8 +77,8 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public  static JwtInfo getInfoFromToken(String token,String publicKey) {
-        Jws<Claims> claimsJws = parserToken(token,publicKey);
+    public static JwtInfo getInfoFromToken(String token, String publicKey) {
+        Jws<Claims> claimsJws = parserToken(token, publicKey);
         Claims body = claimsJws.getBody();
         return new JwtInfo(Integer.valueOf(body.get("userId").toString()), body.getSubject());
     }

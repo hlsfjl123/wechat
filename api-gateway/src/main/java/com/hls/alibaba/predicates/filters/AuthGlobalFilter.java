@@ -1,8 +1,7 @@
 package com.hls.alibaba.predicates.filters;
 
 import com.hls.alibaba.config.JwtConfig;
-import com.hls.alibaba.entity.JwtInfo;
-import com.hls.alibaba.utils.JwtUtils;
+import com.hls.alibaba.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.Data;
@@ -55,8 +54,8 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
          * /从token中解析用户信息并设置到Header中去
          */
         try {
-            JwtInfo infoFromToken = JwtUtils.getInfoFromToken(token,jwtConfig.getPublicKey());
-            ServerHttpRequest request = exchange.getRequest().mutate().header("username", infoFromToken.getUserName()).build();
+            Jws<Claims> claimsJws = JwtUtil.parserToken(token, jwtConfig.getSecret());
+            ServerHttpRequest request = exchange.getRequest().mutate().header("username", claimsJws.getBody().getIssuer()).build();
             exchange = exchange.mutate().request(request).build();
         } catch (Exception e) {
             e.printStackTrace();

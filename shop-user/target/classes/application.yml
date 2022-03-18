@@ -21,3 +21,8 @@ mybatis-plus:
 #    db-config:
 #      table-prefix: hls_
 
+jwt:
+  secret: hls12345!@#
+  privateKey: 1
+  publicKey: 2
+  expire: 86400

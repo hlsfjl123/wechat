@@ -6,7 +6,6 @@ import com.hls.alibaba.dto.UserResponse;
 import com.hls.alibaba.entity.User;
 import com.hls.alibaba.service.UserService;
 import com.hls.alibaba.utils.JwtUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,11 +35,10 @@ public class UserController {
     public UserResponse login(@RequestBody User user) {
         UserResponse userResponse = new UserResponse();
         User returnUser = userService.selectUserByTelAndPassword(user);
-        System.out.println(jwtConfig.getExpire());
-//        if (returnUser != null) {
-//            String token = JwtUtils.createToken(user,jwtConfig.getExpire(),jwtConfig.getSecret());
-//            userResponse.setToken(token);
-//        }
+        if (returnUser != null) {
+            String token = JwtUtils.createToken(returnUser,jwtConfig.getExpire(),jwtConfig.getSecret());
+            userResponse.setToken(token);
+        }
         return userResponse;
     }
 

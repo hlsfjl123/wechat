@@ -29,10 +29,21 @@ spring:
             - Age=15,30
           filters: #过滤器（在请求传递过程中  对请求做一些手脚）
             - StripPrefix=1
-            - Log=true,false
-
+#            - Log=true,false
+        - id: user_rout
+          uri: lb://service-user
+          order: 0
+          predicates:
+            - Path= /user-serv/**
+          filters: #过滤器（在请求传递过程中  对请求做一些手脚）
+            - StripPrefix=1
 my:
   jwt:
     skip-auth-urls:
-      - /user/login
-      - /user/logout
+      - /user-serv/user/login
+      - /user-serv/user/logout
+jwt:
+  secret: hls12345!@#
+  privateKey: 1
+  publicKey: 2
+  expire: 86400

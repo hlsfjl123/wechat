@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties("jwt")
+@ConfigurationProperties(prefix = "jwt")
 public class JwtConfig {
 
     private Integer expire;
