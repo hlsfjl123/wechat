@@ -4,13 +4,11 @@ import com.hls.alibaba.aop.annotaion.VerifyToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -24,10 +22,10 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 @Aspect
-@Component
+//@Component
 public class CheckTokenAspect {
 
-    @Pointcut("execution(public * com.hls.alibaba.controller.*.*(..))")
+    @Pointcut("execution(public * com.hls.alibaba.*.*(..))")
     public void methodPointCut() {
     }
     @Before("methodPointCut()")
@@ -41,9 +39,8 @@ public class CheckTokenAspect {
         String requestHeader = request.getHeader("Authorization");
         if(StringUtils.isEmpty(requestHeader)){
 
-
         }
-        //后续token获取
+        //后续redis token获取
         //token校验
         //token续签
         return joinPoint;

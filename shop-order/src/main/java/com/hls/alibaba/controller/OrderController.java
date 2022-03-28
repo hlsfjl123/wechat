@@ -2,6 +2,7 @@ package com.hls.alibaba.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
+import com.hls.alibaba.aop.annotaion.RedisCache;
 import com.hls.alibaba.entity.Order;
 import com.hls.alibaba.entity.Product;
 import com.hls.alibaba.service.OrderService;
@@ -12,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -32,14 +35,17 @@ public class OrderController {
     String productUrl;
     @Autowired
     OrderService orderService;
-    @Autowired
-    RestTemplate restTemplate;
+//    @Autowired
+//    RestTemplate restTemplate;
     @Autowired
     DiscoveryClient discoveryClient;
     @Autowired
     ProductService productService;
+    @Resource(name = "testTaskExecutor")
+    TaskExecutor taskExecutor;
 
     @PostMapping(value = "/{id}")
+    @RedisCache
     public ObjectRestResponse<Order> order(@PathVariable(value = "id") Integer id) {
         log.info("接收到商品号为{}的商品，接下来下订单", id);
         //ObjectRestResponse<Product> restResponse = restTemplate.getForObject(productUrl + id, ObjectRestResponse.class);
@@ -61,6 +67,25 @@ public class OrderController {
         order.setPPrice(product.getPrice());
         order.setNumber(1);
         return order;
+    }
+
+    @PostMapping(value = "/test/{val}")
+    @RedisCache
+    public Integer test1(@PathVariable(value = "val") Integer val){
+        return val;
+    }
+
+    /**
+     * 样例
+     */
+    public void test(Integer id){
+        taskExecutor.execute(()->{
+            try {
+                productService.getProductById(id);
+            } catch (Exception e) {
+                log.error("获取商品出错{}",e.getMessage());
+            }
+        });
     }
 
 }

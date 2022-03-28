@@ -29,8 +29,8 @@ public class OrderController2 {
     String productUrl;
     @Autowired
     OrderService orderService;
-    @Autowired
-    RestTemplate restTemplate;
+//    @Autowired
+//    RestTemplate restTemplate;
     @Autowired
     DiscoveryClient discoveryClient;
     @Autowired
