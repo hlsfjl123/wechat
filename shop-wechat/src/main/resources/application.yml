@@ -1,0 +1,53 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: service-user
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://175.24.178.200:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    password: hls12345
+    username: root
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  redis:
+    host: 175.24.178.200
+    port: 6379
+    database: 0
+    password: hls12345
+    redis:
+      pool:
+        max-active: 20
+        max-wait: -1
+        max-idle: 10
+        min-idle: 0
+    timeout: 1000
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+wechat:
+  app_id: wxf3b97eb2b6e3b2e7
+  app_secret: 0565d0cd6baa51656db6b2d433976832
+  #获取accessToken地址
+  access_token_url: https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s
+  #获取用户unionid地址
+  union_id_url: https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN
+  #获取带场景值得ticket地址
+  ticket_url: https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s
+  #带场景值得二维码地址
+  qr_code_url: https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=%s
+  #微信授权获取code地址  scope分为静默授权和显式授权
+  auth_url: https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=STATE#wechat_redirect
+  #网页授权获取accessToken地址
+  auth_access_token_url: https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code
+  #refresh_token地址
+  auth_refresh_token_url: https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s
+  #需 scope 为 snsapi_userinfo
+  user_info_url: https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN
+
+
