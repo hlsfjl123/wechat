@@ -12,6 +12,8 @@
         <module>shop-order</module>
         <module>api-gateway</module>
         <module>shop-doc</module>
+        <module>shop-wechat</module>
+        <module>elasticsearch-center</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -21,7 +23,7 @@
         <spring-cloud-alibaba-version>2.2.6.RELEASE</spring-cloud-alibaba-version>
         <mybatis-plus-version>3.4.1</mybatis-plus-version>
         <mysql-connector-version>8.0.20</mysql-connector-version>
-        <fast-json-version>1.2.74</fast-json-version>
+        <fast-json-version>1.2.83</fast-json-version>
         <spring-boot-starter-web-version>2.3.4.RELEASE</spring-boot-starter-web-version>
         <hutool-version>5.7.2</hutool-version>
         <jjwt-vesion>0.9.1</jjwt-vesion>
