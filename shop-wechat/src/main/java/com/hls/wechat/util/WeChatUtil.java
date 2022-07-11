@@ -3,15 +3,12 @@ package com.hls.wechat.util;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hls.wechat.dto.wechat.*;
 import com.hls.wechat.enu.RedisPrefixEnum;
 import com.hls.wechat.peoperties.WeChatProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -34,9 +31,6 @@ public class WeChatUtil {
     @Autowired
     private RestTemplateUtils restTemplateUtils;
 
-    @Autowired
-    @Qualifier("originRestTemplate")
-    private RestTemplate restTemplate;
 
     /**
      * 获取AccessToken
@@ -50,8 +44,8 @@ public class WeChatUtil {
         } else {
             String accessTokenUrl = String.format(weChatProperties.getAccessTokenUrl(), weChatProperties.getAppId(), weChatProperties.getAppSecret());
             String jsonObject = restTemplateUtils.getByMap(accessTokenUrl);
-            accessToken = JSONUtil.toBean(JSONUtil.toJsonStr(jsonObject), AccessToken.class);
-            redisUtil.set(RedisPrefixEnum.ACCESSTOKEN.getDesc() + weChatProperties.getAppId(),accessToken, accessToken.getExpiresIn(), TimeUnit.SECONDS);
+            accessToken = JSON.parseObject(jsonObject, AccessToken.class);
+            redisUtil.set(RedisPrefixEnum.ACCESSTOKEN.getDesc() + weChatProperties.getAppId(), accessToken, accessToken.getExpiresIn(), TimeUnit.SECONDS);
         }
         return accessToken;
     }
@@ -59,18 +53,14 @@ public class WeChatUtil {
     /**
      * 获取二维码地址
      */
-    public String getQrCodeUrl(String accessToken) {
-        String qrCodeUrl = null;
+    public String getQrCodeUrl(String accessToken) throws UnsupportedEncodingException {
+        String qrCodeUrl;
         String ticketUrl = String.format(weChatProperties.getTicketUrl(), accessToken);
         String uuid = IdUtil.fastSimpleUUID();
         WxOfficialTicketRequest request = new WxOfficialTicketRequest(uuid);
         String jsonObject = restTemplateUtils.postByMap(ticketUrl, request);
-        WxOfficialTicketResponse response = JSONUtil.toBean(JSONUtil.toJsonStr(jsonObject), WxOfficialTicketResponse.class);
-        try {
-            qrCodeUrl = String.format(weChatProperties.getQrCodeUrl(), URLEncoder.encode(response.getTicket(), "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            log.info("获取二维码失败{}", e);
-        }
+        WxOfficialTicketResponse response =JSON.parseObject(jsonObject, WxOfficialTicketResponse.class);
+        qrCodeUrl = String.format(weChatProperties.getQrCodeUrl(), URLEncoder.encode(response.getTicket(), "UTF-8"));
         return qrCodeUrl;
     }
 
@@ -81,10 +71,10 @@ public class WeChatUtil {
      * @param openId
      * @return
      */
-    public UnionIdResponse getUnionid(String accessToken, String openId) {
+    public UnionIdResponse getUnionId(String accessToken, String openId) {
         String unionIdUrl = String.format(weChatProperties.getUnionIdUrl(), accessToken, openId);
         String jsonObject = restTemplateUtils.getByMap(unionIdUrl);
-        UnionIdResponse unionIdResponse = JSONUtil.toBean(JSONUtil.toJsonStr(jsonObject), UnionIdResponse.class);
+        UnionIdResponse unionIdResponse =JSON.parseObject(jsonObject, UnionIdResponse.class);
         return unionIdResponse;
     }
 
@@ -95,13 +85,9 @@ public class WeChatUtil {
      * @param authType
      * @return
      */
-    public String getWeChatAuthUrl(String redirectUri, String authType) {
-        String authUrl = null;
-        try {
-            authUrl = String.format(weChatProperties.getAuthUrl(), weChatProperties.getAppId(), URLEncoder.encode(redirectUri, "UTF-8"), authType);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    public String getWeChatAuthUrl(String redirectUri, String authType) throws UnsupportedEncodingException {
+        String authUrl;
+        authUrl = String.format(weChatProperties.getAuthUrl(), weChatProperties.getAppId(), URLEncoder.encode(redirectUri, "UTF-8"), authType);
         return authUrl;
     }
 
@@ -129,6 +115,8 @@ public class WeChatUtil {
         String userInfoUrl = String.format(weChatProperties.getUserInfoUrl(), accessToken, openId);
         String jsonObject = restTemplateUtils.getByMap(userInfoUrl);
         UserInfo userInfo = JSONUtil.toBean(JSONUtil.toJsonStr(jsonObject), UserInfo.class);
+        //解决微信昵称汉字乱码
+        userInfo.setNickname(new String(userInfo.getNickname().getBytes("ISO-8859-1"), "UTF-8"));
         return userInfo;
     }
 }

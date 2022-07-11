@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @Author: User-XH251
@@ -41,12 +42,26 @@ public class UserController {
     }
 
     /**
+     * 获取二维码图片地址（带场景值）
+     * @return
+     */
+    @RequestMapping(value = "qrCode")
+    public String getQrCode() {
+        try {
+            return userService.getQrCode();
+        } catch (UnsupportedEncodingException e) {
+            log.info("获取二维码图片地址", e);
+            return null;
+        }
+    }
+
+    /**
      * 授权地址
      * @return
      */
     @GetMapping(value = "weChatAuthUrl")
     public String weChatAuthUrl() {
-        String redirectUri="http://ug442z.natappfree.cc/user/invoke";
+        String redirectUri="http://rbtsrp.natappfree.cc/user/invoke";
         try {
             return userService.weChatAuthUrl(redirectUri);
         } catch (Exception e) {

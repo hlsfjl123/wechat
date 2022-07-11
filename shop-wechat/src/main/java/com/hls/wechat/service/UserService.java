@@ -31,5 +31,7 @@ public interface UserService extends IService<User> {
      * 网页授权地址
      * @return
      */
-    String weChatAuthUrl(String redirectUri);
+    String weChatAuthUrl(String redirectUri) throws UnsupportedEncodingException;
+
+    String getQrCode() throws UnsupportedEncodingException;
 }

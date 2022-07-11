@@ -2,11 +2,13 @@ package com.hls.wechat.service.impl;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hls.alibaba.entity.User;
 import com.hls.wechat.dto.wechat.AuthAccessToken;
 import com.hls.wechat.dto.wechat.MessageEventInfo;
+import com.hls.wechat.dto.wechat.UnionIdResponse;
 import com.hls.wechat.dto.wechat.UserInfo;
 import com.hls.wechat.enu.AuthorizationTypeEnum;
 import com.hls.wechat.mapper.UserMapper;
@@ -101,8 +103,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public String weChatAuthUrl(String redirectUri) {
+    public String weChatAuthUrl(String redirectUri) throws UnsupportedEncodingException {
         String weChatAuthUrl = weChatUtil.getWeChatAuthUrl(redirectUri, AuthorizationTypeEnum.SNSAPI_USERINFO.getDesc());
         return weChatAuthUrl;
+    }
+
+    @Override
+    public String getQrCode() throws UnsupportedEncodingException {
+        String qrCodeUrl = weChatUtil.getQrCodeUrl(weChatUtil.getAccessToken().getAccessToken());
+        return qrCodeUrl;
+    }
+
+    private String getUnionId(String eventKey) {
+        MessageEventInfo messageEventInfo = JSON.parseObject((String) redisUtil.get("eventPush:" + eventKey), MessageEventInfo.class);
+        UnionIdResponse unionId = weChatUtil.getUnionId(weChatUtil.getAccessToken().getAccessToken(), messageEventInfo.getFromUserName());
+        return unionId.getUnionid();
     }
 }
