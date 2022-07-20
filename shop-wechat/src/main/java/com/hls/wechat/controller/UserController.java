@@ -2,6 +2,8 @@ package com.hls.wechat.controller;
 
 import com.hls.wechat.dto.wechat.UserInfo;
 import com.hls.wechat.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import java.io.UnsupportedEncodingException;
  * @Author: User-XH251
  * @Date: 2022/7/8 16:16
  */
+@Api(tags = "微信公众号相关接口")
 @RestController
 @RequestMapping(value = "/user")
 @Slf4j
@@ -31,6 +34,7 @@ public class UserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "接口验证加事件推送")
     @RequestMapping(value = "wxOfficialCallback")
     public String wxOfficialCallback(HttpServletRequest request) {
         try {
@@ -45,7 +49,8 @@ public class UserController {
      * 获取二维码图片地址（带场景值）
      * @return
      */
-    @RequestMapping(value = "qrCode")
+    @ApiOperation(value = "微信收取按获取二维码地址")
+    @GetMapping(value = "qrCode")
     public String getQrCode() {
         try {
             return userService.getQrCode();
@@ -59,6 +64,7 @@ public class UserController {
      * 授权地址
      * @return
      */
+    @ApiOperation(value = "获取授权地址")
     @GetMapping(value = "weChatAuthUrl")
     public String weChatAuthUrl() {
         String redirectUri="http://rbtsrp.natappfree.cc/user/invoke";
@@ -76,6 +82,7 @@ public class UserController {
      * @param state
      * @return
      */
+    @ApiOperation(value = "回调方法获取用户信息")
     @GetMapping(value = "invoke")
     public UserInfo invoke(@RequestParam("code") String code,
                            @RequestParam("state") String state) {

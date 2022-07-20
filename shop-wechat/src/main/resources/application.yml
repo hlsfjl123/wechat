@@ -9,10 +9,10 @@ spring:
     url: jdbc:mysql://175.24.178.200:3306/hls?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     password: hls12345
     username: root
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: localhost:8848
   redis:
     host: 175.24.178.200
     port: 6379
@@ -32,6 +32,7 @@ mybatis-plus:
 
 wechat:
   app_id: wxf3b97eb2b6e3b2e7
+
   app_secret: 0565d0cd6baa51656db6b2d433976832
   #获取accessToken地址
   access_token_url: https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s
@@ -49,5 +50,7 @@ wechat:
   auth_refresh_token_url: https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s
   #需 scope 为 snsapi_userinfo
   user_info_url: https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN
+
+
 
 

@@ -18,15 +18,16 @@
     <packaging>pom</packaging>
     <properties>
         <java.version>1.8</java.version>
-        <spring-boot-version>2.3.2.RELEASE</spring-boot-version>
-        <spring-cloud-version>Hoxton.SR9</spring-cloud-version>
-        <spring-cloud-alibaba-version>2.2.6.RELEASE</spring-cloud-alibaba-version>
+        <spring-boot-version>2.6.1</spring-boot-version>
+        <spring-cloud-version>2021.0.1</spring-cloud-version>
+        <spring-cloud-alibaba-version>2021.0.1.0</spring-cloud-alibaba-version>
         <mybatis-plus-version>3.4.1</mybatis-plus-version>
         <mysql-connector-version>8.0.20</mysql-connector-version>
         <fast-json-version>1.2.83</fast-json-version>
         <spring-boot-starter-web-version>2.3.4.RELEASE</spring-boot-starter-web-version>
         <hutool-version>5.7.2</hutool-version>
         <jjwt-vesion>0.9.1</jjwt-vesion>
+        <knife4j-spring-boot-starter-version>3.0.2</knife4j-spring-boot-starter-version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -74,6 +75,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot-version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -91,6 +93,11 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>4.1.2</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+               <version>${knife4j-spring-boot-starter-version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -104,7 +111,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>2.6.1</version>
                 <configuration>
                     <excludes>
                         <exclude>
