@@ -1,12 +1,12 @@
 package com.hls.alibaba.predicates.filters;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.hls.alibaba.config.JwtConfig;
 import com.hls.alibaba.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

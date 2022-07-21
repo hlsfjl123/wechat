@@ -15,13 +15,12 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.filter.Filters;
+import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.metrics.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -219,6 +218,28 @@ public class TestController {
         Avg avg_price = (Avg) search.getAggregations().getAsMap().get("avg_price");
         double value = avg_price.getValue();
         System.out.println("平均价"+value);
+    }
+
+    @PostMapping(value = "filtersAggs")
+    public void filterAggs() throws IOException {
+        SearchRequest searchRequest = new SearchRequest("product");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder
+                .aggregation(new FiltersAggregationBuilder("filter_aggs",QueryBuilders.termQuery("title","测试下文档插入"))
+                        .subAggregation(AggregationBuilders.sum("sum_price").field("price")));
+        searchRequest.source(sourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        Filters filter_aggs = (Filters) searchResponse.getAggregations().asMap().get("filter_aggs");
+        for (Filters.Bucket bucket : filter_aggs.getBuckets()) {
+            String keyAsString = bucket.getKeyAsString();
+            long docCount = bucket.getDocCount();
+            System.out.println(keyAsString);
+            System.out.println(docCount);
+            System.out.println("------------------------------------------------------------------");
+            Sum sum_price = (Sum)bucket.getAggregations().get("sum_price");
+            double value = sum_price.getValue();
+            System.out.println(value);
+        }
     }
 
     @PostMapping(value = "aggsmore")
