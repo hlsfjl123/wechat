@@ -1,6 +1,7 @@
 package com.hls.elasticsearch.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hls.elasticsearch.annotation.TestAnnotation;
 import com.hls.elasticsearch.entity.Product;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
@@ -17,6 +18,10 @@ import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.GaussDecayFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.filter.Filters;
@@ -139,6 +144,21 @@ public class TestController {
         }
     }
 
+    private void test(){
+        SearchRequest searchRequest = new SearchRequest("product");
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        //functionScore
+//        FieldValueFactorFunctionBuilder fieldValueFactorFunctionBuilder = ScoreFunctionBuilders.fieldValueFactorFunction("price");
+//        fieldValueFactorFunctionBuilder.missing(0);
+//        searchSourceBuilder.query(QueryBuilders.functionScoreQuery(QueryBuilders.matchAllQuery(),
+//                fieldValueFactorFunctionBuilder).maxBoost(10));
+        //guass函数
+        GaussDecayFunctionBuilder gaussDecayFunctionBuilder = ScoreFunctionBuilders.gaussDecayFunction("price","100","10","10",0.5);
+        searchSourceBuilder.query(QueryBuilders.functionScoreQuery(QueryBuilders.matchAllQuery(),gaussDecayFunctionBuilder));
+        searchRequest.source(searchSourceBuilder);
+    }
+
+
     @PostMapping(value = "aggs")
     public void aggs() throws IOException {
         SearchRequest searchRequest = new SearchRequest("product");
@@ -191,6 +211,8 @@ public class TestController {
         System.out.println("最低价"+value);
     }
 
+
+
     @PostMapping(value = "maxaggs")
     public void maxaggs() throws IOException {
         SearchRequest searchRequest = new SearchRequest("product");
@@ -241,7 +263,7 @@ public class TestController {
             System.out.println(value);
         }
     }
-
+    @TestAnnotation
     @PostMapping(value = "aggsmore")
     public void aggsmore() throws IOException {
         SearchRequest searchRequest = new SearchRequest("product");

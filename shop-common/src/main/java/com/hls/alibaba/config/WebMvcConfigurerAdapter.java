@@ -1,6 +1,8 @@
 package com.hls.alibaba.config;
 
 import com.hls.alibaba.interceptor.ResponseResultInterceptor;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,10 +13,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebMvcConfigurerAdapter implements WebMvcConfigurer {
+    /**
+     * 如果不注入  拦截器类似@Value无法注入值
+     * @return
+     */
+    @Bean
+    public ResponseResultInterceptor init(){
+        return new ResponseResultInterceptor();
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ResponseResultInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(init()).addPathPatterns("/**");
     }
 
 }
