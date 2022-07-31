@@ -215,7 +215,6 @@ public class TestController {
 
     @PostMapping(value = "maxaggs")
     public void maxaggs() throws IOException {
-        System.out.println("1111111111111111111111111111111");
         SearchRequest searchRequest = new SearchRequest("product");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder
