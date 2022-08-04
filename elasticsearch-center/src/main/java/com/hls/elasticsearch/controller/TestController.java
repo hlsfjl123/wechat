@@ -18,10 +18,7 @@ import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
-import org.elasticsearch.index.query.functionscore.GaussDecayFunctionBuilder;
-import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilder;
-import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
+import org.elasticsearch.index.query.functionscore.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.filter.Filters;
@@ -143,8 +140,8 @@ public class TestController {
             System.out.println(product.toString());
         }
     }
-
-    private void test(){
+    @PostMapping(value = "guass")
+    private void guass() throws IOException {
         SearchRequest searchRequest = new SearchRequest("product");
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         //functionScore
@@ -154,8 +151,24 @@ public class TestController {
 //                fieldValueFactorFunctionBuilder).maxBoost(10));
         //guass函数
         GaussDecayFunctionBuilder gaussDecayFunctionBuilder = ScoreFunctionBuilders.gaussDecayFunction("price","100","10","10",0.5);
-        searchSourceBuilder.query(QueryBuilders.functionScoreQuery(QueryBuilders.matchAllQuery(),gaussDecayFunctionBuilder));
+        FunctionScoreQueryBuilder.FilterFunctionBuilder[] filterFunctionBuilders=new  FunctionScoreQueryBuilder.FilterFunctionBuilder[1];
+        FunctionScoreQueryBuilder.FilterFunctionBuilder price = new FunctionScoreQueryBuilder.FilterFunctionBuilder(QueryBuilders.matchAllQuery(), ScoreFunctionBuilders.gaussDecayFunction("price", "100", "10", "10", 0.5));
+        filterFunctionBuilders[0]=price;
+        searchSourceBuilder.query(QueryBuilders.functionScoreQuery(filterFunctionBuilders));
         searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        //总条数
+        long value = searchResponse.getHits().getTotalHits().value;
+        System.out.println("总条数" + value);
+        //对象列表
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        for (SearchHit hit : hits) {
+            float score = hit.getScore();
+            System.out.println("文档分数为{}"+score);
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            Product product = JSON.parseObject(JSON.toJSONString(sourceAsMap), Product.class);
+            System.out.println(product.toString());
+        }
     }
 
 

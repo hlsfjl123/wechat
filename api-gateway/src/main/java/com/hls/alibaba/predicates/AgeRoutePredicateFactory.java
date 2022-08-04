@@ -1,8 +1,8 @@
 package com.hls.alibaba.predicates;
 
+import com.alibaba.nacos.common.utils.StringUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.cloud.gateway.handler.predicate.AbstractRoutePredicateFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;

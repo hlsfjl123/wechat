@@ -14,13 +14,16 @@ import com.hls.wechat.enu.AuthorizationTypeEnum;
 import com.hls.wechat.mapper.UserMapper;
 import com.hls.wechat.service.UserService;
 import com.hls.wechat.util.RedisUtil;
+import com.hls.wechat.util.SimpleRedisLock;
 import com.hls.wechat.util.WeChatUtil;
 import com.hls.wechat.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,6 +45,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private RedisUtil redisUtil;
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public String wxOfficialCallback(HttpServletRequest request) throws IOException {
         //验证token
@@ -60,14 +66,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 buffer.append(str[i]);
             }
             String sha1Hex = DigestUtil.sha1Hex(buffer.toString());
-            if (signature.equals(sha1Hex)) {
-                log.info("接口验证成功");
-                return echostr;
-            }
             if (StringUtils.isEmpty(sha1Hex) || !signature.equals(sha1Hex)) {
                 log.info("接口验证失败");
                 return null;
             }
+            return echostr;
         }
         //推送事件
         Map<String, String> xmlMap = XmlUtil.xmlToMap(request.getInputStream());
@@ -118,5 +121,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         MessageEventInfo messageEventInfo = JSON.parseObject((String) redisUtil.get("eventPush:" + eventKey), MessageEventInfo.class);
         UnionIdResponse unionId = weChatUtil.getUnionId(weChatUtil.getAccessToken().getAccessToken(), messageEventInfo.getFromUserName());
         return unionId.getUnionid();
+    }
+
+    //分布式锁例子
+    public void test() {
+        String userId = "12";
+        SimpleRedisLock simpleRedisLock = new SimpleRedisLock(stringRedisTemplate, "order:" + userId);
+        boolean tryLock = simpleRedisLock.tryLock(5);
+        if(!tryLock){
+            System.out.println("不允许重复操作");
+        }
+        try {
+            System.out.println("111111111111111111");
+        } finally {
+            simpleRedisLock.unlock();
+        }
     }
 }

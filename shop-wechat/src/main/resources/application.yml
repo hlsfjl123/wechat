@@ -52,5 +52,11 @@ wechat:
   user_info_url: https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN
 
 
+knife4j:
+  basic:
+    enable: true
+
+
+
 
 
